@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators background="#ababab"
+        img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;" @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd">
+        <!-- Text slides with image -->
+        <b-carousel-slide v-for="(img, index) in image" :key="index"
+        img-src="img.scr" style="height: 500px;"></b-carousel-slide>
+      </b-carousel>
+
+      <p class="mt-4">
+        Slide #: {{ slide }}<br>
+        Sliding: {{ sliding }}
+      </p>
+    </div>
+  </div>
+
+  <script src="//unpkg.com/@babel/polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          socket: io('http://localhost:3000'),  //koneksi io
+          image: [
+            { src: "./img/1.png" },
+            { src: "./img/2.png" },
+            { src: "./img/3.png" },
+          ],
+          slide: 0,
+          sliding: null
+        }
+      },
+      methods: {
+        onSlideStart(slide) {
+          this.sliding = false
+        },
+        onSlideEnd(slide) {
+          this.sliding = true
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>

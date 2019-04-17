@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
+  <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" />
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <div>
+      <b-carousel id="carousel-1" v-model="slide" :interval="4000" controls indicators background="#ababab"
+        img-width="1024" img-height="480" style="text-shadow: 1px 1px 2px #333;" @sliding-start="onSlideStart"
+        @sliding-end="onSlideEnd">
+        <b-carousel-slide img-src="../img/1.jpg" style="height: 500px;">
+        </b-carousel-slide>
+        <b-carousel-slide img-src="../img/2.jpg" style="height: 500px;">
+        </b-carousel-slide>
+        <b-carousel-slide img-src="../img/3.jpg" style="height: 500px;">
+        </b-carousel-slide>
+        <b-carousel-slide img-src="../img/4.jpg" style="height: 500px;">
+        </b-carousel-slide>
+        <b-carousel-slide img-src="../img/5.jpg" style="height: 500px;">
+        </b-carousel-slide>
+      </b-carousel>
+      <form @submit.prevent="changeSlide" style="text-align: center">
+        <input type="text" v-model="newSlide" placeholder="0 - 4" style="text-align: center; margin:10px;"><br/>
+        <b-button type="submit" variant="danger">Slide</b-button>
+      </form>
+    </div>
+  </div>
+
+  <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  <script src="//unpkg.com/@babel/polyfill@latest/dist/polyfill.min.js"></script>
+  <script src="//unpkg.com/vue@latest/dist/vue.min.js"></script>
+  <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          socket: io('http://localhost:3000'),  //koneksi io
+          slide: 0,
+          newSlide: 0,
+          sliding: null
+        }
+      },
+      methods: {
+        onSlideStart(slide) {
+          this.sliding = true
+        },
+        onSlideEnd(slide) {
+          this.sliding = false
+        },
+        changeSlide(){
+          this.socket.emit('change', this.newSlide)
+        }
+      },
+      mounted(){
+        this.socket.on('changeSlide', data=>{
+          this.slide = data
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>
